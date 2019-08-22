@@ -3,6 +3,7 @@
 # Files and directories created by pub
 .dart_tool/
 .packages
+.vscode
 .pub/
 build/
 # If you're building an application, you may want to check-in your pubspec.lock
@@ -11,3 +12,7 @@ pubspec.lock
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
 doc/api/
+android/local.properties
+ios/Flutter/Generated.xcconfig
+android/.gradle
+*.iml
