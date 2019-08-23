@@ -14,6 +14,11 @@ models: [
   new HomeModel()
 ]));
 
-WidgetCreatorFunction app = dva.start(() => MyApp());
+WidgetCreatorFunction app = dva.start(() => MyApp(), () {
+  ReduxPersistor persistor = new ReduxPersistor(store: dva.store, heartBeat: 1500);
+  persistor.persist();
+});
 
-void main() => runApp(app());
+void main() {
+  return runApp(app());
+}

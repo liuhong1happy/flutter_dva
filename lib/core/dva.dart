@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' hide Action;
-import 'package:flutter_dva/core/reducer.dart';
+import 'package:flutter_dva/core/redux.dart';
 
 abstract class Component  extends StatefulWidget {
   const Component({
@@ -103,17 +103,13 @@ class DvaOpts {
 
 class DvaReducer<T> extends Reducer<T> {
   Model model;
-  Store store;
-  DvaReducer({ this.model, this.store }) {
-    this.initState = this.model.state;
-  }
-  StoreOfState<T> lastState = new StoreOfState<T>();
-
-  canUpdate(StoreOfState<T> lState, StoreOfState<T> nState) {
-    // 比较两个State, 目前是以最后更改时间做判断
-    return lState.updateAt != nState.updateAt;
+  DvaReducer({ this.model, Store store }) : super(store: store) {
+    if(this.model.state!= null) {
+      this.initState = this.model.state;
+    }
   }
 
+  @override
   broadcast() {
     Map<String, StoreOfState<dynamic>> nextStateMap = store.getState();
     StoreOfState<T> nextState = nextStateMap[model.namespace];
@@ -179,11 +175,12 @@ class Dva {
     store.rootState = rootReducer.doReducer(store.rootState, action);
   }
 
-  WidgetCreatorFunction start(WidgetCreatorFunction widgetCreator) {
+  WidgetCreatorFunction start(WidgetCreatorFunction widgetCreator, Function callback) {
     store = createStore(createRootReducer());
     store.rootReducer.reducers.forEach((key, reducer)=> (reducer as DvaReducer).store = store);
     Provider provider = Provider.getInstance();
     provider.store = store;
+    callback();
     return () => widgetCreator();
   }
 }

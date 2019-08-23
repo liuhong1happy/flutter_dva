@@ -1,2 +1,3 @@
-export 'core/reducer.dart';
+export 'core/redux.dart';
 export 'core/dva.dart';
+export 'core/redux-persist.dart';
