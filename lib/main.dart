@@ -15,7 +15,7 @@ models: [
 ]));
 
 WidgetCreatorFunction app = dva.start(() => MyApp(), () {
-  ReduxPersistor persistor = new ReduxPersistor(store: dva.store, heartBeat: 1500);
+  ReduxPersistor persistor = new ReduxPersistor(store: dva.store, heartBeat: 450);
   persistor.persist();
 });
 

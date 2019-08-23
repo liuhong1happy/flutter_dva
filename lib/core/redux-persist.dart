@@ -54,7 +54,7 @@ class ReduxPersistor {
       timer = new Timer(new Duration(milliseconds: heartBeat), ()=> save());
   }
 
-  void persist() async {
+  Future persist() async {
     Map<String, StoreOfState<dynamic>> state = store.getState();
     await Future.wait(state.entries.map((item) async {
       String persistJSON = await getJSON(item.key);
@@ -70,7 +70,7 @@ class ReduxPersistor {
     store.dispatch(Action(PERSISTED_ACTION, {}));
   }
 
-  void save() async {
+  Future save() async {
     Map<String, StoreOfState<dynamic>> state = store.getState();
     await Future.wait(state.entries.map((item) async {
       String persistJSON = JsonEncoder().convert(item.value.getState());
