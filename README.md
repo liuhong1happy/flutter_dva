@@ -18,10 +18,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dva/app.dart';
 import 'package:flutter_dva/dva.dart';
 import 'package:flutter_dva/src/models/home.dart';
+import 'package:flutter_dva/src/states/home.dart';
 
-class CountStateTmpl {
+class CountStateTmpl extends StateTmpl {
   num count;
   CountStateTmpl(this.count);
+
+  void fromJson(Map json) {
+    count = json['count'];
+  }
+
+  Map toJson() =>{
+    'count': count,
+  };
 }
 
 StoreOfState<CountStateTmpl> homeState = new StoreOfState<CountStateTmpl>(state: CountStateTmpl(0));
@@ -34,9 +43,14 @@ models: [
   new HomeModel()
 ]));
 
-WidgetCreatorFunction app = dva.start(() => MyApp());
+WidgetCreatorFunction app = dva.start(() => MyApp(), () {
+  ReduxPersistor persistor = new ReduxPersistor(store: dva.store, heartBeat: 1500);
+  persistor.persist();
+});
 
-void main() => runApp(app());
+void main() {
+  return runApp(app());
+}
 
 /// src/models/home.dart
 import 'package:flutter_dva/dva.dart';
@@ -89,7 +103,9 @@ class MyHomePageState extends Connect<CountStateTmpl, MyHomePage> {
     });
   @override
   Widget build(BuildContext context) {
+    // 引入数据
     num count = state?.count;
+    // 引入方法
     void incrementCounter() {
       props["incrementCounter"]({});
     }
